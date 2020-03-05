@@ -35,7 +35,7 @@ describe('app.js manipulates the DOM to reflect the status of a Car object.', ()
 
     })
     describe('makeButtonIntoBrake() makes a button into a brake.', () => {
-        let testBrake = document.createElement('brake');
+        let testBrake = document.createElement('button');
 
         it('Should update speed of car after brake is clicked.', () => {
             makeButtonIntoBrake(testBrake, testSpeedometer, testCar);

@@ -1,23 +1,36 @@
-const showSpeed = (speedometerElement, car) => {
+const updateSpeedometer = (speedometerElement, car)=>{
     speedometerElement.innerText = car.getSpeed();
-};
-const makeAccelerator = (acceleratorButton, speedometerElement, car) => {
-    acceleratorButton.addEventListener('click', () => {
-        car.accelerate();
-        showSpeed(speedometerElement, car);
-    })
-};
-const updateCheckEngineLight = (checkEngineLightElement, car) => {
-    if (car.getEngineHealth() < 100) {
-        checkEngineLightElement.innerText = 'CHECK ENGINE';
-    }
-};
-
-const wireAcceleratorButton = (car) => {
-    const acceleratorButton = document.querySelector('.floorboard__accelerator');
-    const speedometer = document.querySelector('.dashboard__speedometer');
-    makeAccelerator(acceleratorButton, speedometer, car);
 }
 
+const updateCheckEngineLight = (checkEngineLight, car) => {
+    if(car.getEngineHealth()<100){
+        checkEngineLight.innerText='CHECK ENGINE'
+    }
+}
+const makeButtonIntoAccelerator = (accelerator, speedometer, car) =>{
+    accelerator.addEventListener('click', ()=>{
+        car.accelerate();
+        updateSpeedometer(speedometer, car);
+        updateDashBoard()
+    })
+}
+const makeButtonIntoBrake = (brake, speedometer, car) =>{
+    brake.addEventListener('click', ()=>{
+        car.brake();
+        updateSpeedometer(speedometer, car);
+        updateDashBoard()
+    });
+}
+const updateDashBoard = ()=>{
+    updateSpeedometer(speedometerElement, appCar);
+    updateCheckEngineLight(checkEngineLight, appCar)
+}
+
+const acceleratorButton = document.querySelector('.floorboard__accelerator');
+const brakeButton = document.querySelector('.floorboard__brake');
+const speedometerElement = document.querySelector('.dashboard__speedometer');
+const checkEngineLight = document.querySelector('.dashboard__check-engine-light');
 const appCar = new Car();
-wireAcceleratorButton(appCar);
+
+makeButtonIntoAccelerator(acceleratorButton, speedometerElement, appCar);
+makeButtonIntoBrake(brakeButton,speedometerElement, appCar);

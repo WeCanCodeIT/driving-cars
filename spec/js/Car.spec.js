@@ -56,6 +56,12 @@ describe('Car should behave like a car:', () => {
             });
         });
     });
+    it('resetCar() makes car all new again!',()=>{
+        carGoFast(100);
+        underTest.reset();
+        expect(underTest.getEngineHealth()).toBe(100);
+        expect(underTest.getSpeed()).toBe(0);
+    })
     const carGoFast = (speed) => {
         for (let i = 0; i < speed / 10; i++) {
             underTest.accelerate();

@@ -1,72 +1,100 @@
 describe('app.js manipulates the DOM to reflect the status of a Car object.', () => {
     let testCar;
-    let testDiv;
+    let testSpeedometer;
     let testAccelerator;
     beforeEach(() => {
         testCar = new Car();
-        testDiv = document.createElement('div');
+        testSpeedometer = document.createElement('div');
         testAccelerator = document.createElement('button');
-        makeAccelerator(testAccelerator, testDiv, testCar);
-    });
-    describe('showSpeed() - As the car accelerates, the innerText of the passed element reflects the cars speed.', () => {
-        it('Without accelerating the car speed should be 0.', () => {
-            showSpeed(testDiv, testCar);
-            expect(testDiv.innerText).toBe('0');
+        makeButtonIntoAccelerator(testAccelerator, testSpeedometer, testCar);
+
+    })
+    describe('updateSpeedometer() changes an element\'s innerText to match a given car\'s speed', () => {
+
+        it('Speedometer element should have an innerText of \'0\' if the car is not moving.', () => {
+            updateSpeedometer(testSpeedometer, testCar);
+            expect(testSpeedometer.innerText).toBe('0');
         });
-        it('After accelerating the car speed should be 10.', () => {
+        it('Speedometer element should have an innerText of \'10\' if the car\'s speed is 10.', () => {
             testCar.accelerate();
-            showSpeed(testDiv, testCar);
-            expect(testDiv.innerText).toBe('10');
+            updateSpeedometer(testSpeedometer, testCar);
+            expect(testSpeedometer.innerText).toBe('10');
         });
+
     });
-    describe('showSpeed() - As the car brakes, the innerText of the passed element reflects the cars speed.', () => {
-        it('Braking to 10 should show a speed of 10.', () => {
-            testCar.accelerate();
-            testCar.accelerate();
-            testCar.brake();
-            showSpeed(testDiv, testCar);
-            expect(testDiv.innerText).toBe('10');
-        });
-    });
-    describe('makeAccelerator() - Creates an accelerator button out of the passed button, calls accelerate() one time when clicked.', () => {
-        beforeEach(() => {});
-        it('Clicking once on the new accelerator will increase the car\'s speed.', () => {
+    describe('makeButtonIntoAccelerator() makes a button into an accelerator.', () => {
+        beforeEach(() => {
             testAccelerator.click();
+        })
+        it('Should update speed of car after accelerator is clicked.', () => {
             expect(testCar.getSpeed()).toBe(10);
         });
-        it('Clicking once on the accelerator will increase the speedometer elements innerText to \'10\'.', () => {
+        it('Should update testSpeedometer after testAccelerator is clicked.', () => {
+            expect(testSpeedometer.innerText).toBe('10');
+        })
+
+    })
+    describe('makeButtonIntoBrake() makes a button into a brake.', () => {
+        let testBrake = document.createElement('brake');
+
+        it('Should update speed of car after brake is clicked.', () => {
+            makeButtonIntoBrake(testBrake, testSpeedometer, testCar);
             testAccelerator.click();
-            expect(testDiv.innerText).toBe('10');
+            testBrake.click();
+            expect(testCar.getSpeed()).toBe(0);
+
+        })
+        it('Should update testSpeedometer after testBrake is clicked', () => {
+            makeButtonIntoBrake(testBrake, testSpeedometer, testCar);
+            testAccelerator.click();
+            testBrake.click();
+            expect(testSpeedometer.innerText).toBe('0')
         });
     });
-    describe('updateCheckEngineLight() - Changes the text and color of the passed element.', () => {
-        let testCheckEngineDiv;
+    describe('updateCheckEngineLight() change an elements innerText to represent engine health.', () => {
+        let testCheckEngineLight;
+
         beforeEach(() => {
-            testCheckEngineDiv = document.createElement('div');
+            testCheckEngineLight = document.createElement('div');
         })
-        describe('When engine health goes below 100, the check engine light turns amber.', () => {
-            it('Perfect engine health should leave light off.', () => {
-                updateCheckEngineLight(testCheckEngineDiv, testCar);
-                expect(testCheckEngineDiv.innerText).toBe('')
-            });
-            it('Engine health of 90 should turn light on.', () => {
-                for (let i = 0; i < 7; i++) {
-                    testAccelerator.click()
-                }
-                updateCheckEngineLight(testCheckEngineDiv, testCar);
-                expect(testCheckEngineDiv.innerText).toBe('CHECK ENGINE');
-            });
-        });
+
+        it('Check Enginge Light element innerText is \'\' when engineHealth is 100', () => {
+            updateCheckEngineLight(testCheckEngineLight, testCar);
+            expect(testCheckEngineLight.innerText).toBe('');
+        })
+        it('Check Engine Light should come on (innerText = \'CHECK ENGINE\') if engineHealth is less than 100', () => {
+            while (testCar.getSpeed() < 70) {
+                testCar.accelerate();
+            }
+            updateCheckEngineLight(testCheckEngineLight, testCar);
+            expect(testCheckEngineLight.innerText).toBe('CHECK ENGINE')
+        })
     });
 });
 describe('The app.js file wires the elements of the Car.js and index.html files together.', () => {
-    describe('The accelerator increases the displayed speed of the car.', () => {
-        const accelerator = document.querySelector('.floorboard__accelerator');
-        const speedometer = document.querySelector('.dashboard__speedometer');
+    const accelerator = document.querySelector('.floorboard__accelerator');
+    const speedometer = document.querySelector('.dashboard__speedometer');
+    const brake = document.querySelector('.floorboard__brake');
+    const checkEngineLight = document.querySelector('.dashboard__check-engine-light')
+    beforeEach(()=>{
+        appCar.reset();
+        updateSpeedometer(speedometer,appCar);
+    });
+    it('Hitting the accelerator once should increase the displayed speed to 10.', () => {
+        accelerator.click();
+        expect(speedometer.innerText).toBe('10');
+    });
 
-        it('Hitting the accelerator once should increase the displayed speed to 10.', () => {
+    it('Hitting the brake after the accelator should display 0 on the speedometer', () => {
+        accelerator.click();
+        brake.click();
+        expect(speedometer.innerText).toBe('0');
+
+    });
+    it('Check Engine Light comes on when the car goes fast!', ()=>{
+        while(speedometerElement.innerText!=='70'){
             accelerator.click();
-            expect(speedometer.innerText).toBe('10');
-        })
+        }
+        expect(checkEngineLight.innerText).toBe('CHECK ENGINE');
     })
 });

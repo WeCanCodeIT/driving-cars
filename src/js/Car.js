@@ -20,6 +20,10 @@ class Car {
             this._speed = 0;
         }
     }
+    reset(){
+        this._speed = 0;
+        this._engineHealth = 100;
+    }
 
     getEngineHealth() {
         return this._engineHealth;

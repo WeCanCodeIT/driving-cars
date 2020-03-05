@@ -59,3 +59,14 @@ describe('app.js manipulates the DOM to reflect the status of a Car object.', ()
         });
     });
 });
+describe('The app.js file wires the elements of the Car.js and index.html files together.', () => {
+    describe('The accelerator increases the displayed speed of the car.', () => {
+        const accelerator = document.querySelector('.floorboard__accelerator');
+        const speedometer = document.querySelector('.dashboard__speedometer');
+
+        it('Hitting the accelerator once should increase the displayed speed to 10.', () => {
+            accelerator.click();
+            expect(speedometer.innerText).toBe('10');
+        })
+    })
+});
